@@ -86,9 +86,9 @@ class MyHomePage extends StatelessWidget {
   }
 
   final List<ItemHomepage> items = [
-    ItemHomepage("Lihat Product", Icons.mood),
-    ItemHomepage("Tambah Product", Icons.add),
-    ItemHomepage("Logout", Icons.logout),
+    ItemHomepage("Lihat Product", Icons.mood, Colors.yellow),
+    ItemHomepage("Tambah Product", Icons.add, Colors.orange),
+    ItemHomepage("Logout", Icons.logout, Colors.red),
   ];
 }
 
@@ -181,6 +181,7 @@ class ItemCard extends StatelessWidget {
 class ItemHomepage {
   final String name;
   final IconData icon;
+  final Color color;
 
-  ItemHomepage(this.name, this.icon);
+  ItemHomepage(this.name, this.icon, this.color);
 }
