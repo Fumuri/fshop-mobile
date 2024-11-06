@@ -70,19 +70,38 @@ Perbedaan dari keduanya :
 4. Column: Menyusun widget secara vertikal. Digunakan untuk mengatur letak teks, grid, dan elemen-elemen lain dalam tampilan.
 5. Row: Menyusun widget secara horizontal. Dalam contoh ini, Row digunakan untuk menampilkan tiga InfoCard secara berdampingan.
 6. GridView.count: Menampilkan widget dalam bentuk grid dengan jumlah kolom tertentu. Di sini, GridView digunakan untuk menampilkan ItemCard dalam tiga kolom.
+7. Center: Menyusun widget anaknya di tengah-tengah secara horisontal dan vertikal.
+8. Text: Menampilkan teks statis. Digunakan untuk menampilkan informasi seperti "Welcome to FShop" dan nama item di dalam kartu.
+9. SizedBox: Memberikan ruang atau jarak antar widget. Dalam proyek ini, SizedBox digunakan untuk memberikan jarak vertikal antar elemen.
+10. Card: Membuat tampilan kotak dengan bayangan di bawahnya. Card digunakan untuk InfoCard, menampilkan informasi seperti NPM, Nama, dan Kelas.
+11. Material: Memberikan efek material pada widget dan sering digunakan bersama InkWell untuk efek sentuhan.
+12. InkWell: Menambahkan animasi sentuhan pada widget. Pada proyek ini, InkWell digunakan dalam ItemCard sehingga setiap item dalam grid bereaksi saat disentuh.
+13. Icon: Menampilkan ikon yang mewakili setiap item dalam ItemCard, seperti ikon tambah atau logout.
+14. SnackBar: Menampilkan notifikasi sementara di bagian bawah layar. Dalam proyek ini, digunakan untuk memberi tahu pengguna ketika mereka menekan suatu item.
 
-Center: Menyusun widget anaknya di tengah-tengah secara horisontal dan vertikal.
+### 3. Apa fungsi dari `setState()`? Jelaskan variabel apa saja yang dapat terdampak dengan fungsi tersebut.
 
-Text: Menampilkan teks statis. Digunakan untuk menampilkan informasi seperti "Welcome to FShop" dan nama item di dalam kartu.
+`setState()` memberi tahu framework bahwa ada bagian dari State yang berubah dan perlu diperbarui. Hanya widget yang dipengaruhi oleh perubahan data yang akan dirender ulang, sehingga tidak semua elemen dalam aplikasi harus diperbarui, yang membuat aplikasi lebih efisien.
+Variabel-variabel yang dapat terpengaruh oleh setState() adalah:
 
-SizedBox: Memberikan ruang atau jarak antar widget. Dalam proyek ini, SizedBox digunakan untuk memberikan jarak vertikal antar elemen.
+1. Variabel State
 
-Card: Membuat tampilan kotak dengan bayangan di bawahnya. Card digunakan untuk InfoCard, menampilkan informasi seperti NPM, Nama, dan Kelas.
+Hanya variabel yang didefinisikan di dalam kelas State dari StatefulWidget yang dapat dipengaruhi oleh setState(). Ini termasuk variabel yang digunakan untuk menyimpan data sementara seperti counter, daftar item, status login, dll.
 
-Material: Memberikan efek material pada widget dan sering digunakan bersama InkWell untuk efek sentuhan.
+2. Properti UI
 
-InkWell: Menambahkan animasi sentuhan pada widget. Pada proyek ini, InkWell digunakan dalam ItemCard sehingga setiap item dalam grid bereaksi saat disentuh.
+Setiap properti UI yang tergantung pada nilai variabel state juga akan diperbarui. Contohnya, jika sebuah widget menampilkan teks dari variabel state, maka teks tersebut akan diperbarui setiap kali setState() dijalankan.
 
-Icon: Menampilkan ikon yang mewakili setiap item dalam ItemCard, seperti ikon tambah atau logout.
+3. Objek yang Dapat Diubah
 
-SnackBar: Menampilkan notifikasi sementara di bagian bawah layar. Dalam proyek ini, digunakan untuk memberi tahu pengguna ketika mereka menekan suatu item.
+Jika variabel adalah objek yang kompleks seperti daftar atau map, perubahan pada item di dalam objek tersebut juga bisa memicu setState() untuk merender ulang bagian-bagian tertentu.
+
+### 4. Jelaskan perbedaan antara const dengan final.
+
+1. `const`
+
+Variabel `const` harus diinisialisasi dengan nilai konstan yang sudah diketahui saat waktu kompilasi, artinya nilainya sudah tetap bahkan sebelum kode dijalankan. Semua variabel `const` bersifat immutable (tidak dapat diubah) dan akan tetap konstan di seluruh aplikasi. `const` dapat digunakan pada tingkat kelas atau global untuk membuat objek konstanta yang dapat diakses di seluruh aplikasi. Dengan `const`, objek hanya dibuat sekali di memori (singleton), sehingga menghemat memori.
+
+2. `final`
+
+Variabel `final` hanya bisa diinisialisasi satu kali, tetapi inisialisasinya dapat dilakukan saat runtime (saat aplikasi dijalankan). Jadi, kita tidak perlu tahu nilai dari variabel `final` saat kompilasi. Setelah diinisialisasi, nilai `final` tidak bisa diubah. Namun, berbeda dengan `const`, `final` memungkinkan nilai ditentukan saat runtime. Karena dapat diinisialisasi saat runtime, `final` lebih fleksibel dibandingkan `const`. Misalnya, `final` cocok digunakan untuk nilai yang diperoleh saat runtime, seperti hasil perhitungan atau input dari pengguna.
