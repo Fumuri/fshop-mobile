@@ -176,7 +176,34 @@ Perbedaan Column dan Row :
 
 ### 3. Sebutkan apa saja elemen input yang kamu gunakan pada halaman form yang kamu buat pada tugas kali ini. Apakah terdapat elemen input Flutter lain yang tidak kamu gunakan pada tugas ini? Jelaskan!
 
-1. TextFormField: Digunakan untuk menerima masukan teks dari pengguna. Kamu menggunakan tiga TextFormField untuk mengambil input:
+Elemen input yang digunakan:
+1. TextFormField, digunakan untuk menerima masukan teks dari pengguna. Kamu menggunakan tiga TextFormField untuk mengambil input:
 - Product: Untuk nama produk.
 - Description: Untuk deskripsi produk.
 - Quantity: Untuk jumlah produk. Ada validasi tambahan untuk memastikan bahwa input diisi dan berupa angka.
+2. ElevatedButton, sebagai tombol aksi yang digunakan untuk menyimpan data form. Ketika ditekan, tombol ini memeriksa validasi form dan menampilkan dialog konfirmasi jika validasi berhasil.
+3. AlertDialog, bukan elemen input, namun digunakan untuk menampilkan pesan pop-up setelah tombol "Save" ditekan dan data berhasil divalidasi.
+
+Elemen Input yang tidak digunakan:
+1. Checkbox untuk membuat kotak centang. Umumnya digunakan untuk memilih opsi biner (ya/tidak).
+2. Switch, mirip dengan Checkbox, namun dalam bentuk saklar on/off.
+3. Radio, untuk pilihan tunggal dari beberapa opsi, cocok untuk memilih satu item dari beberapa opsi.
+4. DropdownButton, untuk menampilkan daftar opsi yang dapat dipilih pengguna dalam bentuk dropdown.
+5. Slider, untuk menerima input berupa nilai rentang, seperti memilih angka dalam range tertentu.
+
+### 4. Bagaimana cara kamu mengatur tema (theme) dalam aplikasi Flutter agar aplikasi yang dibuat konsisten? Apakah kamu mengimplementasikan tema pada aplikasi yang kamu buat?
+
+Pada `main.dart`, dengan mendefinisikan ThemeData di MaterialApp, semua widget di aplikasi akan mengikuti aturan tema ini secara konsisten, termasuk warna, teks, dan gaya elemen. Saya menggunakan colorScheme untuk menetapkan warna utama dan sekunder. dan dengan mengaktifkan useMaterial3: true menyesuaikan aplikasi agar mendukung gaya terbaru dari Flutter, sehingga elemen UI akan lebih modern dan sesuai dengan pedoman desain Material 3.
+
+### 5. Bagaimana cara kamu menangani navigasi dalam aplikasi dengan banyak halaman pada Flutter?
+
+Saya menangani navigasi pada `left_drawer.dart` dengan menggunakan `Navigator.pushReplacement` agar ketika pengguna berpindah halaman, halaman sebelumnya tidak dapat diakses dengan tombol "back."
+```dart
+  onTap: () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MyHomePage()),
+    );
+  }
+```
+Navigator digunakan untuk mengatur stack halaman. Dengan `Navigator.push`, halaman baru ditambahkan ke stack, sementara `Navigator.pushReplacement` mengganti halaman saat ini dengan halaman baru tanpa menumpuknya di stack.
