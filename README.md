@@ -207,3 +207,175 @@ Saya menangani navigasi pada `left_drawer.dart` dengan menggunakan `Navigator.pu
   }
 ```
 Navigator digunakan untuk mengatur stack halaman. Dengan `Navigator.push`, halaman baru ditambahkan ke stack, sementara `Navigator.pushReplacement` mengganti halaman saat ini dengan halaman baru tanpa menumpuknya di stack.
+
+## Tugas Individu 9
+### 1. Jelaskan mengapa kita perlu membuat model untuk melakukan pengambilan ataupun pengiriman data JSON? Apakah akan terjadi error jika kita tidak membuat model terlebih dahulu?
+
+1. Memastikan Konsistensi Data
+
+Model membantu memastikan bahwa data yang diterima dari atau dikirim ke API memiliki struktur dan tipe data yang sesuai. Dengan model, kita dapat dengan mudah memetakan atribut JSON ke atribut objek dalam aplikasi kita.
+
+2. Mengurangi Risiko Error
+
+Tanpa model, data yang diterima dari JSON biasanya diakses melalui tipe `Map<String, dynamic>`. Jika ada kesalahan pada struktur JSON (seperti nama atribut berubah, tipe data salah, atau atribut tidak ada), maka akan lebih sulit mendeteksi kesalahan atau menangani kasus tersebut.
+
+3. Mempermudah Pemrosesan Data
+
+Model memudahkan pengelolaan data, seperti:
+
+- Konversi JSON ke objek: `ProductEntry.fromJson(json)`
+- Konversi objek ke JSON: `productEntry.toJson()`
+- Mengelola data di UI atau logika aplikasi dengan struktur yang jelas.
+
+Tanpa model, kita harus bekerja langsung dengan peta data `(Map<String, dynamic>)`, yang membuat kode sulit dipahami dan rawan kesalahan.
+
+4. Skalabilitas
+
+Jika aplikasi bertumbuh, penggunaan model memastikan bahwa kode tetap terstruktur. Tanpa model, semakin banyak data JSON yang harus ditangani, semakin sulit menjaga konsistensi, dan kemungkinan error akan meningkat.
+
+**Apakah Akan Terjadi Error Jika Tidak Membuat Model?**
+1. Tidak selalu error, tetapi kode menjadi lebih sulit di-maintain. Misalnya:
+- Kamu bisa tetap membaca JSON dengan cara manual `(json['key'])`.
+- Namun, ini membuat kode kurang aman dan rawan error saat runtime.
+
+2. Kesalahan seperti berikut lebih mungkin terjadi:
+- Null Safety Issue: Ketika key tidak ada atau bernilai null.
+- Type Issue: Ketika tipe data dari JSON tidak sesuai.
+
+### 2. Jelaskan fungsi dari library http yang sudah kamu implementasikan pada tugas ini
+
+Pada kode yang saya gunakan, fungsi library http dalah untuk melakukan komunikasi antara aplikasi Flutter dan backend (Django). Library ini memungkinkan aplikasi Flutter mengirimkan permintaan HTTP dan menerima respons dari server. 
+
+1. Fungsi `fetchMood` di `list_productentry.dart`
+
+Mengambil data dari backend dalam format JSON menggunakan metode `GET`. Data JSON diterjemahkan menjadi objek Dart (`ProductEntry`) menggunakan metode `fromJson`. Fungsi ini membantu mengubah data yang diterima dari backend menjadi objek yang lebih mudah digunakan di aplikasi Flutter.
+
+2. Fungsi `login` di `login.dart`
+
+Mengautentikasi pengguna dengan mengirimkan username dan password ke endpoint login backend menggunakan metode `POST`. Endpoint login Django menerima data pengguna, memverifikasi kredensial, dan memberikan respons yang sesuai (misalnya, berhasil atau gagal).
+
+3. Fungsi `onPressed` di `product_entryform.dart`
+
+Mengirimkan data produk baru yang dimasukkan oleh pengguna ke backend menggunakan metode `POST`. Data yang dimasukkan pengguna diubah menjadi JSON menggunakan `jsonEncode` sebelum dikirim. URL endpoint Django menangani data dan menyimpannya ke database.
+
+4. Fungsi `onPressed` di `register.dart`
+
+Mendaftarkan pengguna baru dengan mengirimkan data pendaftaran (seperti username dan password) ke endpoint registrasi backend menggunakan metode `POST`. Data dikirim dalam format JSON ke endpoint Django yang memproses pendaftaran.
+
+### 3. Jelaskan fungsi dari CookieRequest dan jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+
+**Fungsi Utama `CookieRequest`:**
+1. `CookieRequest` secara otomatis menangani cookie yang diterima dari server (misalnya cookie sesi setelah login) dan menyertakannya dalam setiap permintaan HTTP berikutnya.Cookie ini memungkinkan backend mengenali pengguna yang sedang aktif tanpa perlu mengirim ulang token atau kredensial setiap kali ada permintaan.
+
+2. Mempermudah penggunaan metode `GET`, `POST`, atau metode HTTP lainnya sambil memastikan cookie disertakan dalam header permintaan.
+
+3. `CookieRequest` dapat digunakan untuk memeriksa apakah pengguna masih terautentikasi dengan memeriksa keberadaan atau validitas cookie sesi.
+
+4. Dengan metode seperti `postJson` dan `get`, `CookieRequest` menyederhanakan pengiriman data JSON ke backend dan penerimaan respons dalam format yang sama.
+
+**Mengapa `CookieRequest` Perlu Dibagikan ke Semua Komponen Aplikasi Flutter?**
+1. Jika komponen berbeda di aplikasi (seperti halaman login, formulir entri, atau daftar produk) menggunakan instans `CookieRequest` yang sama, mereka akan berbagi cookie sesi yang sama. Hal ini memastikan backend dapat terus mengenali pengguna saat mereka berpindah halaman atau melakukan tindakan lain di aplikasi.
+
+2. Membuat instans `CookieRequest` baru untuk setiap permintaan HTTP berarti cookie dan status sesi tidak akan dipertahankan, sehingga pengguna akan dianggap "baru" oleh server. Dengan berbagi instans, semua komponen bisa menggunakan cookie yang sama tanpa perlu otentikasi ulang.
+
+3. Membagikan instans `CookieRequest` melalui seluruh aplikasi menyederhanakan kode karena semua komponen menggunakan alat yang sama untuk berkomunikasi dengan backend.
+
+4. Setelah pengguna login dan cookie sesi tersimpan, halaman atau komponen lain dapat mengakses status login tersebut melalui instans `CookieRequest`.
+
+### 4. Jelaskan mekanisme pengiriman data mulai dari input hingga dapat ditampilkan pada Flutter.
+
+1. Pengumpulan Data dari Input Pengguna
+
+Pada Flutter, data yang dimasukkan pengguna melalui elemen input seperti TextField atau TextFormField ditangkap dan disimpan dalam variabel atau state. Fungsi `onChanged` mengambil data yang dimasukkan pengguna dan `validator` memvalidasi apakah data sudah sesuai format yang diinginkan.
+
+2. Pengiriman Data ke Backend
+
+Setelah data terkumpul, data dikirim ke backend menggunakan pustaka seperti http atau CookieRequest dalam bentuk HTTP Request. Data dikirim dalam format tertentu seperti JSON, sesuai kebutuhan API. Fungsi `postJson` mengirim data dalam format JSON melalui metode HTTP POST ke endpoint API backend dan `jsonEncode`m engubah data menjadi format JSON agar kompatibel dengan API.
+
+3. Pemrosesan Data di Backend
+
+- Backend menerima request dari Flutter.
+- Backend memvalidasi data yang diterima.
+- Jika valid, data disimpan dalam database atau diproses sesuai kebutuhan.
+- Backend mengirimkan respons ke Flutter, yang biasanya berisi status pengiriman atau data yang telah diolah.
+
+4. Penerimaan Respons di Flutter
+
+Flutter menerima respons dari backend, lalu respons tersebut di-decode menjadi objek atau model untuk diproses lebih lanjut. Fungsi `response` menyimpan data hasil respons dari backenddan `setState` memperbarui UI berdasarkan hasil respons.
+
+5. Menampilkan Data di UI Flutter
+
+Data yang diterima dari backend (misalnya hasil respons atau data baru dari API) ditampilkan kembali ke pengguna melalui widget, seperti Text, ListView, atau DataTable
+
+### 5. Jelaskan mekanisme autentikasi dari login, register, hingga logout. Mulai dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+
+#### 1. Register (Pendaftaran Akun Baru)
+
+**Input Data di Flutter:**
+1. Pengguna mengisi data akun melalui form input (misalnya `TextFormField`).
+2. Data seperti `username`, `password`, dan `confirm_password` dikirimkan ke endpoint Django menggunakan HTTP POST.
+
+**Proses di Django:**
+1. Django menerima data pendaftaran melalui endpoint `/auth/register/`.
+2. Backend memvalidasi:
+- Apakah username sudah ada?
+- Apakah password dan confirm_password cocok?
+3. Jika validasi berhasil:
+- Django menyimpan data pengguna ke database (misalnya, menggunakan model `User` dari Django's Authentication Framework).
+- Django mengembalikan respons JSON
+4. Jika terjadi kesalahan, Django mengembalikan respons dengan pesan error.
+
+**Respons di Flutter:**
+1. Flutter menerima respons dari Django.
+2. Jika berhasil, pengguna diberi notifikasi sukses dan diarahkan ke halaman login.
+
+#### 2.  Login (Autentikasi Pengguna)
+
+**Input Data di Flutter:**
+1. Pengguna memasukkan `username` dan `password` pada form login.
+2. Data dikirimkan ke endpoint Django `/auth/login/` menggunakan HTTP POST.
+
+**Proses di Django:**
+1. Django menerima data login dan memvalidasi:
+- Apakah username ada di database?
+- Apakah password sesuai dengan hashed password yang disimpan?
+2. Jika validasi berhasil:
+- Django membuat sesi (session) atau token autentikasi (misalnya, JSON Web Token atau session cookie).
+- Django mengembalikan respons JSON dengan status berhasil dan informasi sesi/token.
+3. Jika validasi gagal, Django mengembalikan pesan error.
+
+**Penyimpanan Token di Flutter:**
+1. Flutter menerima respons dari Django.
+2. Token disimpan secara lokal di perangkat pengguna, misalnya menggunakan `SharedPreferences` atau `secure_storage`.
+3. Jika login berhasil, pengguna diarahkan ke halaman menu utama.
+
+#### 3. Mengakses Menu Setelah Login
+
+**Token Validasi:**
+1. Flutter menggunakan token yang disimpan untuk mengakses data dari API Django.
+2. Setiap permintaan HTTP ke Django disertai dengan token autentikasi di header.
+
+**Proses di Django:**
+1. Django memvalidasi token yang diterima dari permintaan HTTP.
+2. Jika token valid, Django memberikan data yang diminta (misalnya, daftar produk atau profil pengguna).
+3. Jika token tidak valid, Django mengembalikan pesan error dengan status tidak terautentikasi.
+
+**Penerapan di Flutter:**
+1. Jika respons valid, data ditampilkan kepada pengguna.
+2. Jika tidak valid, pengguna diarahkan kembali ke halaman login.
+
+#### 4. Logout (Mengakhiri Sesi)
+
+**Proses di Flutter:**
+1. Flutter mengirim permintaan HTTP ke endpoint Django `/auth/logout/` menggunakan HTTP POST atau DELETE.
+2. Token atau sesi dihapus dari Django.
+3. Token lokal di Flutter juga dihapus, biasanya menggunakan `SharedPreferences` atau `secure_storage`.
+
+**Proses di Django:**
+1. Django menerima permintaan logout.
+2. Django menghapus sesi/token yang terkait dengan pengguna.
+3. Django mengembalikan respons JSON
+
+**Penyelesaian di Flutter:**
+1. Token dihapus dari perangkat pengguna.
+2. Pengguna diarahkan kembali ke halaman login.
